@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, query, where, QueryConstraint } from 'firebase/firestore';
 import { useFirestore } from '@/firebase/provider';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
@@ -56,26 +56,42 @@ const getRiskLabel = (riskScore: number) => {
 export default function SymptomHeatmapPage() {
   const mapImage = PlaceHolderImages.find((img) => img.id === 'map-placeholder');
   const firestore = useFirestore();
+  const [diseaseFilter, setDiseaseFilter] = useState('all');
   const [symptomFilter, setSymptomFilter] = useState('all');
 
   const reportsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     const baseQuery = collection(firestore, 'symptom_reports_public');
-    if (symptomFilter === 'all') {
-      return baseQuery;
+    
+    const constraints: QueryConstraint[] = [];
+    if (diseaseFilter !== 'all') {
+        constraints.push(where('disease', '==', diseaseFilter));
     }
-    return query(
-      baseQuery,
-      where('reportedSymptoms', 'array-contains', symptomFilter)
-    );
-  }, [firestore, symptomFilter]);
+    if (symptomFilter !== 'all') {
+        constraints.push(where('reportedSymptoms', 'array-contains', symptomFilter));
+    }
+
+    return query(baseQuery, ...constraints);
+  }, [firestore, diseaseFilter, symptomFilter]);
 
   const { data: reports, isLoading } = useCollection(reportsQuery);
 
+   const fullReportsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'symptom_reports_public');
+  }, [firestore]);
+
+  const { data: allReports } = useCollection(fullReportsQuery);
+
+  const uniqueDiseases = useMemo(() => {
+    const allDiseases = allReports?.map((r) => r.disease).filter(Boolean) || [];
+    return ['all', ...Array.from(new Set(allDiseases))];
+  }, [allReports]);
+
   const uniqueSymptoms = useMemo(() => {
-    const allSymptoms = reports?.flatMap((r) => r.reportedSymptoms) || [];
+    const allSymptoms = allReports?.flatMap((r) => r.reportedSymptoms) || [];
     return ['all', ...Array.from(new Set(allSymptoms))];
-  }, [reports]);
+  }, [allReports]);
 
   return (
     <div className="grid gap-6">
@@ -88,9 +104,21 @@ export default function SymptomHeatmapPage() {
                 Real-time heatmap of crowdsourced symptom reports.
               </CardDescription>
             </div>
-            <div className="w-full sm:w-64">
-              <Select value={symptomFilter} onValueChange={setSymptomFilter}>
-                <SelectTrigger>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Select value={diseaseFilter} onValueChange={setDiseaseFilter}>
+                <SelectTrigger className="w-full sm:w-48">
+                  <SelectValue placeholder="Filter by disease..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {uniqueDiseases.map((disease) => (
+                    <SelectItem key={disease} value={disease} className="capitalize">
+                      {disease}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+               <Select value={symptomFilter} onValueChange={setSymptomFilter}>
+                <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Filter by symptom..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -146,6 +174,7 @@ export default function SymptomHeatmapPage() {
                       </TooltipTrigger>
                       <TooltipContent>
                         <p className="font-bold capitalize">{report.location}</p>
+                        {report.disease && <p className='text-sm font-semibold capitalize'>Disease: {report.disease}</p>}
                         <p className='text-sm capitalize'>
                           Symptoms: {report.reportedSymptoms.join(', ')}
                         </p>
