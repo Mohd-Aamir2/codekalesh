@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { BrainCircuit, DatabaseZap, BellRing, Globe } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { HealthGuardAIChatbot } from './health-guard-ai-chatbot';
 
 const features: {
   title: string;
@@ -91,6 +92,7 @@ export function Home() {
           </div>
         </section>
       </main>
+      <HealthGuardAIChatbot />
       <Footer />
     </div>
   );
