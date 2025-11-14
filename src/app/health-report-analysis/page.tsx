@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ClipboardPulse, Loader2, Lightbulb, Activity, FlaskConical } from 'lucide-react';
+import { ClipboardPlus, Loader2, Lightbulb, Activity, FlaskConical } from 'lucide-react';
 import { analyzeHealthReport } from '@/ai/flows/analyze-health-report';
 import type { AnalyzeHealthReportOutput } from '@/ai/flows/analyze-health-report';
 import { useToast } from '@/hooks/use-toast';
@@ -54,7 +54,7 @@ export default function HealthReportAnalysisPage() {
   return (
     <div className="grid gap-6">
       <div className="flex items-center gap-4">
-        <ClipboardPulse className="h-8 w-8 text-primary" />
+        <ClipboardPlus className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-2xl font-bold font-headline">
             Health Report Analysis

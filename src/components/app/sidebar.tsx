@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   BarChartBig,
   Bell,
-  ClipboardPulse,
+  ClipboardPlus,
   Database,
   LayoutDashboard,
   Map,
@@ -40,7 +40,7 @@ const menuItems = [
   {
     href: '/health-report-analysis',
     label: 'Health Report Analysis',
-    icon: ClipboardPulse,
+    icon: ClipboardPlus,
   },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
