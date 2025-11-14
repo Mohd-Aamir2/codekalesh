@@ -15,11 +15,13 @@ import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignUp } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,6 +33,14 @@ export default function SignupPage() {
   }, [user, isUserLoading, router]);
 
   const handleSignUp = () => {
+    if (!email || !password) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign Up Failed',
+        description: 'Please enter both email and password.',
+      });
+      return;
+    }
     initiateEmailSignUp(auth, email, password);
   };
 
@@ -77,6 +87,7 @@ export default function SignupPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSignUp()}
               />
             </div>
             <Button onClick={handleSignUp} className="w-full font-bold">

@@ -17,11 +17,13 @@ import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +35,14 @@ export default function LoginPage() {
   }, [user, isUserLoading, router]);
 
   const handleSignIn = () => {
+    if (!email || !password) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: 'Please enter both email and password.',
+      });
+      return;
+    }
     initiateEmailSignIn(auth, email, password);
   };
 
@@ -85,6 +95,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSignIn()}
               />
             </div>
             <Button onClick={handleSignIn} className="w-full font-bold">
