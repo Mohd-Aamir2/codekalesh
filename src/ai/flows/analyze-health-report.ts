@@ -1,8 +1,8 @@
 'use server';
 /**
- * @fileOverview An AI flow for analyzing user-provided health reports.
+ * @fileOverview An AI flow for analyzing user-provided health reports from text and/or images.
  *
- * - analyzeHealthReport - A function that analyzes the text of a health report.
+ * - analyzeHealthReport - A function that analyzes the text and/or image of a health report.
  * - AnalyzeHealthReportInput - The input type for the analyzeHealthReport function.
  * - AnalyzeHealthReportOutput - The return type for the analyzeHealthReport function.
  */
@@ -13,7 +13,14 @@ import { z } from 'zod';
 const AnalyzeHealthReportInputSchema = z.object({
   reportText: z
     .string()
-    .describe('The full text content of the health report to be analyzed.'),
+    .optional()
+    .describe('The text content of the health report to be analyzed.'),
+  reportImageDataUri: z
+    .string()
+    .optional()
+    .describe(
+      "An image of the health report, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
 });
 export type AnalyzeHealthReportInput = z.infer<
   typeof AnalyzeHealthReportInputSchema
@@ -42,11 +49,16 @@ const analyzeReportPrompt = ai.definePrompt({
   name: 'analyzeHealthReportPrompt',
   input: { schema: AnalyzeHealthReportInputSchema },
   output: { schema: AnalyzeHealthReportOutputSchema },
-  prompt: `You are an expert medical analyst AI. Your task is to analyze the following health report text.
-  Carefully review the entire report and extract the most critical information.
+  prompt: `You are an expert medical analyst AI. Your task is to analyze the following health report provided as text and/or an image.
+  Carefully review all available information and extract the most critical data.
 
-  Health Report:
+  Health Report Text (if provided):
   {{{reportText}}}
+
+  Health Report Image (if provided):
+  {{#if reportImageDataUri}}
+    {{media url=reportImageDataUri}}
+  {{/if}}
 
   Your analysis should be structured into three parts:
   1. Summary: Provide a brief, easy-to-understand overview of the report's contents.
@@ -64,8 +76,8 @@ const analyzeHealthReportFlow = ai.defineFlow(
     outputSchema: AnalyzeHealthReportOutputSchema,
   },
   async (input) => {
-    if (!input.reportText.trim()) {
-      throw new Error('Health report text cannot be empty.');
+    if (!input.reportText?.trim() && !input.reportImageDataUri) {
+      throw new Error('Health report text or image must be provided.');
     }
     const { output } = await analyzeReportPrompt(input);
     return output!;

@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,32 +12,48 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ClipboardPlus, Loader2, Lightbulb, Activity, FlaskConical } from 'lucide-react';
+import { ClipboardPlus, Loader2, Lightbulb, Activity, FlaskConical, Upload, X } from 'lucide-react';
 import { analyzeHealthReport } from '@/ai/flows/analyze-health-report';
 import type { AnalyzeHealthReportOutput } from '@/ai/flows/analyze-health-report';
 import { useToast } from '@/hooks/use-toast';
 
 export default function HealthReportAnalysisPage() {
   const [reportText, setReportText] = useState('');
+  const [reportImage, setReportImage] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<AnalyzeHealthReportOutput | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReportImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleAnalysis = async () => {
-    if (!reportText.trim()) {
+    if (!reportText.trim() && !reportImage) {
       toast({
         variant: 'destructive',
         title: 'Report is empty',
-        description: 'Please paste the text from your health report.',
+        description: 'Please paste text or upload an image of your health report.',
       });
       return;
     }
     setIsLoading(true);
     setAnalysis(null);
     try {
-      const result = await analyzeHealthReport({ reportText });
+      const result = await analyzeHealthReport({ 
+        reportText: reportText,
+        reportImageDataUri: reportImage || undefined,
+       });
       setAnalysis(result);
     } catch (error) {
       console.error('Failed to get analysis:', error);
@@ -50,6 +67,8 @@ export default function HealthReportAnalysisPage() {
       setIsLoading(false);
     }
   };
+  
+  const isSubmitDisabled = (!reportText.trim() && !reportImage) || isLoading;
 
   return (
     <div className="grid gap-6">
@@ -69,19 +88,54 @@ export default function HealthReportAnalysisPage() {
         <CardHeader>
           <CardTitle>Submit Your Report</CardTitle>
           <CardDescription>
-            Paste the text content from your health report into the text area
-            below and click &quot;Analyze Report&quot; to get AI-driven insights.
+            Paste the text from your health report and/or upload an image.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Textarea
-            placeholder="Paste your health report text here..."
-            className="h-48"
-            value={reportText}
-            onChange={(e) => setReportText(e.target.value)}
-            disabled={isLoading}
-          />
-          <Button onClick={handleAnalysis} disabled={isLoading}>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Textarea
+              placeholder="Paste your health report text here..."
+              className="h-48"
+              value={reportText}
+              onChange={(e) => setReportText(e.target.value)}
+              disabled={isLoading}
+            />
+            <div className='flex flex-col gap-2'>
+              <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept="image/*"
+                  disabled={isLoading}
+                />
+              {!reportImage ? (
+                <Button
+                  variant="outline"
+                  className="h-48 border-dashed"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload Report Image
+                </Button>
+              ) : (
+                <div className="relative h-48 rounded-md border overflow-hidden">
+                  <Image src={reportImage} alt="Health report preview" layout="fill" objectFit="contain" />
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 h-6 w-6"
+                    onClick={() => setReportImage(null)}
+                    disabled={isLoading}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+          <Button onClick={handleAnalysis} disabled={isSubmitDisabled}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Analyzing...' : 'Analyze Report'}
           </Button>
