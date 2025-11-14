@@ -61,11 +61,8 @@ User Interaction Logic:
 - If user asks unrelated questions: Politely answer or redirect back to health safety topics.
 `,
   prompt: (input) => [
-    ...input.history.map((h) => ({
-      role: h.role,
-      content: [{ text: h.content }],
-    })),
-    { role: 'user', content: [{ text: input.prompt }] },
+    ...input.history,
+    { role: 'user', content: input.prompt },
   ],
 });
 
