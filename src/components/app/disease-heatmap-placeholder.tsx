@@ -9,6 +9,7 @@ import {
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '../ui/button';
 import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 export function DiseaseHeatmapPlaceholder() {
   const mapImage = PlaceHolderImages.find((img) => img.id === 'map-placeholder');
@@ -23,9 +24,11 @@ export function DiseaseHeatmapPlaceholder() {
               AI-predicted high-risk areas globally.
             </CardDescription>
           </div>
-          <Button variant="outline" size="sm">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Open Map
+          <Button asChild variant="outline" size="sm">
+            <Link href="/map-view">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Open Map
+            </Link>
           </Button>
         </div>
       </CardHeader>
