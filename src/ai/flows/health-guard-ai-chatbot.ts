@@ -7,7 +7,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const SymptomReportSchema = z.object({
   location: z.string().describe('The location (e.g., city, region) reported by the user.'),
@@ -61,7 +61,10 @@ User Interaction Logic:
 - If user asks unrelated questions: Politely answer or redirect back to health safety topics.
 `,
   prompt: (input) => [
-    ...input.history.map((h) => ({ role: h.role, content: [{ text: h.content }] })),
+    ...input.history.map((h) => ({
+      role: h.role,
+      content: [{ text: h.content }],
+    })),
     { role: 'user', content: [{ text: input.prompt }] },
   ],
 });
