@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { BrainCircuit, DatabaseZap, BellRing, Globe } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { HealthGuardAIChatbot } from './health-guard-ai-chatbot';
+import { EmergencyAlertForm } from './emergency-alert-form';
+import { Separator } from '../ui/separator';
 
 const features: {
   title: string;
@@ -64,31 +66,56 @@ export function Home() {
           </div>
         </section>
 
-        <section id="features" className="container space-y-6 bg-slate-50/50 dark:bg-transparent py-8 md:py-12 lg:py-24">
+        <section
+          id="features"
+          className="container space-y-6 bg-slate-50/50 dark:bg-transparent py-8 md:py-12 lg:py-24"
+        >
           <div className="mx-auto flex max-w-2xl flex-col items-center space-y-4 text-center">
             <h2 className="text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl font-headline">
               Key Features
             </h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">
-              Discover the powerful tools Sentinel offers for proactive disease surveillance.
+              Discover the powerful tools Sentinel offers for proactive disease
+              surveillance.
             </p>
           </div>
           <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => (
-              <Card key={feature.title} className="text-center hover:shadow-lg transition-shadow duration-300">
+              <Card
+                key={feature.title}
+                className="text-center hover:shadow-lg transition-shadow duration-300"
+              >
                 <CardHeader>
                   <div className="flex justify-center">
                     <div className="bg-primary/10 text-primary p-4 rounded-full">
                       <feature.icon className="h-8 w-8" />
                     </div>
                   </div>
-                  <CardTitle className="pt-4 font-headline text-xl">{feature.title}</CardTitle>
+                  <CardTitle className="pt-4 font-headline text-xl">
+                    {feature.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <p className="text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </section>
+
+        <section id="emergency-alert" className="container py-8 md:py-12 lg:py-24">
+          <div className="mx-auto flex max-w-2xl flex-col items-center space-y-4 text-center">
+            <h2 className="text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl font-headline">
+              Emergency Alert System
+            </h2>
+            <p className="max-w-[700px] text-lg text-muted-foreground">
+              Broadcast critical alerts to the public in real-time.
+            </p>
+          </div>
+          <div className="mx-auto max-w-3xl mt-8">
+             <EmergencyAlertForm />
           </div>
         </section>
       </main>
