@@ -11,14 +11,12 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Icons } from '@/components/icons';
-import { Separator } from '@/components/ui/separator';
 import { useAuth, useUser } from '@/firebase';
-import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
+import { initiateEmailSignUp } from '@/firebase/non-blocking-login';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
@@ -32,8 +30,8 @@ export default function LoginPage() {
     }
   }, [user, isUserLoading, router]);
 
-  const handleSignIn = () => {
-    initiateEmailSignIn(auth, email, password);
+  const handleSignUp = () => {
+    initiateEmailSignUp(auth, email, password);
   };
 
   if (isUserLoading || user) {
@@ -51,9 +49,11 @@ export default function LoginPage() {
           <div className="mb-4 flex justify-center">
             <Shield className="h-12 w-12 text-primary" />
           </div>
-          <CardTitle className="text-3xl font-headline">Sentinel</CardTitle>
+          <CardTitle className="text-3xl font-headline">
+            Create an Account
+          </CardTitle>
           <CardDescription>
-            Sign in to access the outbreak detection dashboard
+            Join Sentinel to monitor disease outbreaks
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -70,15 +70,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -87,29 +79,14 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button onClick={handleSignIn} className="w-full font-bold">
-              Sign In
-            </Button>
-            <div className="relative">
-              <Separator />
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            <Button variant="outline" className="w-full" disabled>
-              <Icons.google className="mr-2 h-4 w-4" />
-              Sign in with Google
+            <Button onClick={handleSignUp} className="w-full font-bold">
+              Sign Up
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="underline">
+              Sign in
             </Link>
           </div>
         </CardContent>
