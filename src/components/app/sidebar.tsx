@@ -11,6 +11,7 @@ import {
   Map,
   Settings,
   Shield,
+  Wind,
 } from 'lucide-react';
 
 import {
@@ -30,6 +31,11 @@ const menuItems = [
   { href: '/data-sources', label: 'Data Sources', icon: Database },
   { href: '/map-view', label: 'Map View', icon: Map },
   { href: '/reports', label: 'Reports', icon: BarChartBig },
+  {
+    href: '/mosquito-prediction',
+    label: 'Mosquito Prediction',
+    icon: Wind,
+  },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
