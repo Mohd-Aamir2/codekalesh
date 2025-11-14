@@ -1,0 +1,412 @@
+{
+  "entities": {
+    "Hospital": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Hospital",
+      "type": "object",
+      "description": "Represents a hospital entity, storing information about healthcare facilities.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Hospital entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the hospital."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the hospital (e.g., address)."
+        },
+        "contactNumber": {
+          "type": "string",
+          "description": "Contact phone number of the hospital."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "location"
+      ]
+    },
+    "Pharmacy": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Pharmacy",
+      "type": "object",
+      "description": "Represents a pharmacy entity, storing information about pharmaceutical locations.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Pharmacy entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the pharmacy."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the pharmacy (e.g., address)."
+        },
+        "contactNumber": {
+          "type": "string",
+          "description": "Contact phone number of the pharmacy."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "location"
+      ]
+    },
+    "WeatherData": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WeatherData",
+      "type": "object",
+      "description": "Represents weather data, storing relevant information obtained from weather APIs.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the WeatherData entity."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the weather data was recorded.",
+          "format": "date-time"
+        },
+        "temperature": {
+          "type": "number",
+          "description": "Temperature in Celsius or Fahrenheit."
+        },
+        "humidity": {
+          "type": "number",
+          "description": "Humidity percentage."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location for which the weather data is recorded."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "temperature",
+        "humidity",
+        "location"
+      ]
+    },
+    "SocialMediaData": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SocialMediaData",
+      "type": "object",
+      "description": "Represents social media data, storing information obtained from social media APIs (e.g., Google Trends, Twitter).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the SocialMediaData entity."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the social media data was recorded.",
+          "format": "date-time"
+        },
+        "searchTerm": {
+          "type": "string",
+          "description": "Search term used to collect the social media data (e.g., disease name)."
+        },
+        "volume": {
+          "type": "number",
+          "description": "Search volume or mentions count."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "searchTerm",
+        "volume"
+      ]
+    },
+    "DiseaseReport": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DiseaseReport",
+      "type": "object",
+      "description": "Represents a disease report, containing information about reported cases.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DiseaseReport entity."
+        },
+        "hospitalId": {
+          "type": "string",
+          "description": "Reference to Hospital. (Relationship: Hospital 1:N DiseaseReport)"
+        },
+        "reportDate": {
+          "type": "string",
+          "description": "Date when the report was created.",
+          "format": "date-time"
+        },
+        "diseaseName": {
+          "type": "string",
+          "description": "Name of the disease reported."
+        },
+        "caseCount": {
+          "type": "number",
+          "description": "Number of cases reported."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location where the disease was reported."
+        }
+      },
+      "required": [
+        "id",
+        "hospitalId",
+        "reportDate",
+        "diseaseName",
+        "caseCount",
+        "location"
+      ]
+    },
+    "OutbreakPrediction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OutbreakPrediction",
+      "type": "object",
+      "description": "Represents the output of the machine learning model, predicting outbreak risks.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OutbreakPrediction entity."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the prediction was made.",
+          "format": "date-time"
+        },
+        "diseaseName": {
+          "type": "string",
+          "description": "Name of the disease predicted."
+        },
+        "riskLevel": {
+          "type": "number",
+          "description": "Risk level of an outbreak (e.g., 0 to 1)."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location for which the prediction is made."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "diseaseName",
+        "riskLevel",
+        "location"
+      ]
+    },
+    "Alert": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Alert",
+      "type": "object",
+      "description": "Represents an alert that is triggered when an outbreak probability exceeds a threshold.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Alert entity."
+        },
+        "predictionId": {
+          "type": "string",
+          "description": "Reference to OutbreakPrediction. (Relationship: OutbreakPrediction 1:N Alert)"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the alert was triggered.",
+          "format": "date-time"
+        },
+        "severity": {
+          "type": "string",
+          "description": "Severity level of the alert (e.g., low, medium, high)."
+        },
+        "message": {
+          "type": "string",
+          "description": "Message describing the alert."
+        }
+      },
+      "required": [
+        "id",
+        "predictionId",
+        "timestamp",
+        "severity",
+        "message"
+      ]
+    },
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name of the user."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user (e.g., admin, user)."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "displayName",
+        "role"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/hospitals/{hospitalId}",
+        "definition": {
+          "entityName": "Hospital",
+          "schema": {
+            "$ref": "#/backend/entities/Hospital"
+          },
+          "description": "Stores information about hospitals. Publicly accessible.",
+          "params": [
+            {
+              "name": "hospitalId",
+              "description": "Unique identifier for the hospital."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pharmacies/{pharmacyId}",
+        "definition": {
+          "entityName": "Pharmacy",
+          "schema": {
+            "$ref": "#/backend/entities/Pharmacy"
+          },
+          "description": "Stores information about pharmacies. Publicly accessible.",
+          "params": [
+            {
+              "name": "pharmacyId",
+              "description": "Unique identifier for the pharmacy."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/weatherData/{weatherDataId}",
+        "definition": {
+          "entityName": "WeatherData",
+          "schema": {
+            "$ref": "#/backend/entities/WeatherData"
+          },
+          "description": "Stores weather data. Publicly accessible.",
+          "params": [
+            {
+              "name": "weatherDataId",
+              "description": "Unique identifier for the weather data entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/socialMediaData/{socialMediaDataId}",
+        "definition": {
+          "entityName": "SocialMediaData",
+          "schema": {
+            "$ref": "#/backend/entities/SocialMediaData"
+          },
+          "description": "Stores social media data. Publicly accessible.",
+          "params": [
+            {
+              "name": "socialMediaDataId",
+              "description": "Unique identifier for the social media data entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/diseaseReports/{diseaseReportId}",
+        "definition": {
+          "entityName": "DiseaseReport",
+          "schema": {
+            "$ref": "#/backend/entities/DiseaseReport"
+          },
+          "description": "Stores disease reports. Publicly accessible.",
+          "params": [
+            {
+              "name": "diseaseReportId",
+              "description": "Unique identifier for the disease report."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/outbreakPredictions/{outbreakPredictionId}",
+        "definition": {
+          "entityName": "OutbreakPrediction",
+          "schema": {
+            "$ref": "#/backend/entities/OutbreakPrediction"
+          },
+          "description": "Stores outbreak predictions. Publicly accessible.",
+          "params": [
+            {
+              "name": "outbreakPredictionId",
+              "description": "Unique identifier for the outbreak prediction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/alerts/{alertId}",
+        "definition": {
+          "entityName": "Alert",
+          "schema": {
+            "$ref": "#/backend/entities/Alert"
+          },
+          "description": "Stores alerts triggered by outbreak predictions. Publicly accessible.",
+          "params": [
+            {
+              "name": "alertId",
+              "description": "Unique identifier for the alert."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/userProfiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information. Accessible only to the user and admins.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user.  Matches the Firebase Auth UID."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the AI-powered disease outbreak detection system, named Sentinel, while adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are Not Filters). It also utilizes Structural Segregation, Access Modeling, and Data Clarity principles. The data structure facilitates storing and retrieving data from various sources like hospitals, pharmacies, weather APIs, and social media, along with AI model predictions and alerts.\n\nAuthorization Independence is achieved by denormalizing authorization context where necessary. For example, if access to disease reports needed to be restricted based on hospital affiliation, the hospital's relevant attributes would be copied to the report. In this case, since all users can view reports, this is not needed.\n\nStructural Segregation is applied by using separate collections for distinct data types, each with potentially different security needs (e.g., `hospitals`, `pharmacies`, `weatherData`, `socialMediaData`, `diseaseReports`, `outbreakPredictions`, `alerts`, and `userProfiles`).\n\nAccess Modeling uses path-based ownership for user profiles (`/userProfiles/{userId}`) and leverages the existing Firebase Authentication `request.auth.uid` for authentication. Global roles are managed via content in the `userProfiles` documents. The structure supports QAPs by ensuring that `list` operations can be secured effectively without requiring filtering in the rules.\n\nInvariants such as ownership and timestamps are maintained through the structure, ensuring data integrity. The naming conventions are explicit and consistent, contributing to overall debuggability."
+  }
+}
