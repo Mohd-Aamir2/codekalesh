@@ -60,9 +60,9 @@ User Interaction Logic:
 - If user asks for prevention: Give simple steps like hygiene, mosquito prevention, weather-based precautions, home remedies, mask usage during flu season.
 - If user asks unrelated questions: Politely answer or redirect back to health safety topics.
 `,
-  prompt: ({ history, prompt }) => [
-    ...history,
-    { role: 'user', content: prompt },
+  prompt: (input) => [
+    ...input.history.map((h) => ({ role: h.role, content: [{ text: h.content }] })),
+    { role: 'user', content: [{ text: input.prompt }] },
   ],
 });
 
