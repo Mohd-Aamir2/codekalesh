@@ -12,6 +12,7 @@ import {
   Settings,
   Shield,
   Wind,
+  Users,
 } from 'lucide-react';
 
 import {
@@ -30,6 +31,7 @@ const menuItems = [
   { href: '/alerts', label: 'Alerts', icon: Bell },
   { href: '/data-sources', label: 'Data Sources', icon: Database },
   { href: '/map-view', label: 'Map View', icon: Map },
+  { href: '/symptom-heatmap', label: 'Symptom Heatmap', icon: Users },
   { href: '/reports', label: 'Reports', icon: BarChartBig },
   {
     href: '/mosquito-prediction',

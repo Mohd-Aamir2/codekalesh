@@ -6,11 +6,13 @@
  * - /users/{userId}: Stores user profile data, accessible only to the user.
  * - /users/{userId}/symptom_reports/{reportId}: Stores user symptom reports, accessible only to the user. The `userId` is denormalized onto each `SymptomReport` document.
  * - /roles_admin/{userId}: Indicates admin privileges; document existence grants admin access.
+ * - /symptom_reports_public/{reportId}: Stores anonymized symptom reports for public heatmap visualization.
  *
  * Key Security Decisions:
  * - Users can only access their own user documents and symptom reports.
  * - Admin privileges are granted based on document existence in `/roles_admin/{userId}`.
  * - User listing is disabled for enhanced privacy.
+ * - Public symptom reports are readable by any signed-in user but can only be created.
  *
  * Denormalization for Authorization:
  * - The `userId` is denormalized into the `symptom_reports` documents to achieve authorization independence. This avoids costly `get()` calls and ensures efficient security checks.
@@ -84,6 +86,23 @@ service cloud.firestore {
       allow get: if isSignedIn() && request.auth.uid == userId;
       allow create, update, delete: if false; // Only allow service accounts to manage admin roles
       allow list: if false;
+    }
+
+    /**
+     * @description Controls access to public symptom reports for heatmap visualization.
+     * @path /symptom_reports_public/{reportId}
+     * @allow (create) Any signed-in user can create a public symptom report.
+     * @allow (list, get) Any signed-in user can read public symptom reports for the heatmap.
+     * @deny (update, delete) Public reports are immutable to maintain data integrity.
+     */
+    match /symptom_reports_public/{reportId} {
+        function isSignedIn() {
+            return request.auth != null;
+        }
+
+        allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+        allow list, get: if isSignedIn();
+        allow update, delete: if false;
     }
   }
 }

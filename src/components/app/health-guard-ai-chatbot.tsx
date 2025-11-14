@@ -76,16 +76,21 @@ export function HealthGuardAIChatbot() {
       setMessages((prev) => [...prev, assistantMessage]);
 
       if (response.symptomReport && user && firestore) {
-        const reportCollection = collection(
+        const userReportCollection = collection(
           firestore,
           `users/${user.uid}/symptom_reports`
+        );
+         const publicReportCollection = collection(
+          firestore,
+          `symptom_reports_public`
         );
         const reportData = {
           ...response.symptomReport,
           userId: user.uid,
           timestamp: serverTimestamp(),
         };
-        addDocumentNonBlocking(reportCollection, reportData);
+        addDocumentNonBlocking(userReportCollection, reportData);
+        addDocumentNonBlocking(publicReportCollection, reportData);
       }
     } catch (error) {
       const errorMessage: Message = {
