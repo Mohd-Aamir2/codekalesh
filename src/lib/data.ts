@@ -6,7 +6,7 @@ import {
   TrendingUp,
   Users,
 } from 'lucide-react';
-import type { Alert, StatCard, TrendData } from './types';
+import type { Alert, StatCard, TrendData, DiseaseReportData } from './types';
 
 export const STAT_CARDS: StatCard[] = [
   {
@@ -89,4 +89,29 @@ export const TREND_DATA: TrendData[] = [
   { date: 'Jul 18', 'New Cases': 310 },
   { date: 'Jul 19', 'New Cases': 330 },
   { date: 'Jul 20', 'New Cases': 350 },
+];
+
+export const DISEASE_REPORTS_DATA: DiseaseReportData[] = [
+  { name: 'Influenza Type B', value: 400, fill: 'hsl(var(--chart-1))' },
+  { name: 'Dengue Fever', value: 300, fill: 'hsl(var(--chart-2))' },
+  { name: 'COVID-19 Variant', value: 300, fill: 'hsl(var(--chart-3))' },
+  { name: 'Norovirus', value: 200, fill: 'hsl(var(--chart-4))' },
+];
+
+export const ALERTS_BY_SEVERITY_DATA = [
+  {
+    name: 'Low',
+    count: 15,
+    fill: 'var(--color-low)',
+  },
+  {
+    name: 'Medium',
+    count: 25,
+    fill: 'var(--color-medium)',
+  },
+  {
+    name: 'High',
+    count: 10,
+    fill: 'var(--color-high)',
+  },
 ];

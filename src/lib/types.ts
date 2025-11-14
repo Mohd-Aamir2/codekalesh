@@ -21,3 +21,9 @@ export type TrendData = {
   date: string;
   'New Cases': number;
 };
+
+export type DiseaseReportData = {
+  name: string;
+  value: number;
+  fill: string;
+};
