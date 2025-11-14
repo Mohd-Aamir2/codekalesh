@@ -1,3 +1,4 @@
+
 'use client';
 import { useMemo } from 'react';
 import Image from 'next/image';
@@ -21,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useCollection } from '@/firebase';
+import { useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where } from 'firebase/firestore';
 import { useFirestore } from '@/firebase/provider';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -57,7 +58,7 @@ export default function SymptomHeatmapPage() {
   const firestore = useFirestore();
   const [symptomFilter, setSymptomFilter] = useState('all');
 
-  const reportsQuery = useMemo(() => {
+  const reportsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     const baseQuery = collection(firestore, 'symptom_reports_public');
     if (symptomFilter === 'all') {
